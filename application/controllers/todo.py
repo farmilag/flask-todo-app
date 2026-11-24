@@ -14,7 +14,7 @@ todo_bp = flask.Blueprint(
 
 @todo_bp.route('/', methods=['GET', 'POST'])
 def index():
-    todo = Todo.query.order_by('-id')
+    todo = Todo.query.order_by(Todo.id.desc())
     _form = request.form
 
     if request.method == 'POST':
@@ -24,8 +24,9 @@ def index():
             td.store_to_db()
             flash("add task successfully!")
             return redirect(url_for('todo.index'))
-        except Exception as e:
-            print e
+        except Exception:
+            db.session.rollback()
+            flask.current_app.logger.exception("Failed to add task")
             flash("fail to add task!")
 
     return render_template('index.html', todo=todo)
