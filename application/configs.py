@@ -7,6 +7,9 @@ basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class Config(object):
     # Flask config
     SECRET_KEY = '^753*&FdFS#4D'
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'todo.sqlite')
+    )
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
@@ -24,12 +27,10 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'todo.sqlite')  # NOQA
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'todo.sqlite')  # NOQA
-
+    pass
 config = {
     'default': DevelopmentConfig,
     'development': DevelopmentConfig,
